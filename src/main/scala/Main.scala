@@ -1,4 +1,5 @@
 import Comparators._
+import ComparatorSyntax._
 
 object Main extends App{
 
@@ -22,6 +23,11 @@ object Main extends App{
 
   val intComparatorResult2 = implicitly[Comparator[Int]].compare(3,4)
   println(intComparatorResult2)
+
+  val sym1 = 1 >-> 2
+  println(sym1)
+  val sym2 = Set(1,2,3) >-> Set(1,3,5,7)
+  println(sym2)
 
   def sort[T](list: List[T])(implicit comparator: Comparator[T]): List[T] = {
     list match {
