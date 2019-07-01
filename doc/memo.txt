@@ -1,0 +1,103 @@
+Scala における型クラス入門
+
+型クラスとは？
+=> 一般的な説明では、overload の一種
+   では型クラス = overload ?
+
+型クラスは strategy パターンを表す
+
+実行時に適切な振る舞いを選ぶ
+
+例: Comparator
+
+
+Comparator[T] // 比較器
+一般的な型に対して abstract method で
+  compareメソッドが宣言される
+  abstract compare(a: T, b: T)
+
+実装は型引数があきらかになったsubクラスで行う
+
+IntComprarator
+  override def compare(a: Int , b : Int) = ???
+
+DateComparator
+  override def compare(a: Date, b: Date) = ???
+
+
+sort(list, IntComparator) と指定すれば
+intでの比較の仕方でやってくれる
+
+具体例1 参照
+※ sortメソッドの配置はMainでいいのか？
+  本来ならCollectionあたりにあるのがよさそう？
+  list.sort みたいな使い方
+  ここでは、sortをとりあえず実行したいため、Mainメソッドに配置
+
+具体例1の問題点
+
+型によって自然な順序がある
+// Int  数字の小さい順
+// Date 時系列順
+自然な順序の場合は明記したくない
+コンパイラ側で推測してほしい
+
+=> 型クラスは型システムにより支援されたストラテジパターン
+
+- ある型に対して自然なストラテジーをプログラマーが明記する必要なし
+- 型に対して自然なストラテジを定義できる
+
+
+<<定義>>  // TaPL とかの話？
+・型クラス
+  ストラテジのインターフェースにあたるものを”型クラス” という
+   例: Comparaor[T] は型クラス
+  // 型引数が必要になるもの? 型を包めるもの
+     = Seq とか Option とか Either とか　Future という認識でいいのか？
+
+
+・型クラスインスタンス
+
+  クラスXが”型クラスTのインスタンスである” とは
+  T[X]型のストラテジオブジェクトが実装できることを指す
+  例: Int は型クラスComparaor[T] のインスタンスである
+     ∵ Comparator[Int]型のオブジェクト IntComparator が実装されているため
+
+
+・型クラス制約 とは
+  ストラテジがとる引数　のこと
+    例: sort メソッドの引数comparator は 型クラス制約
+
+・型クラスインスタンス宣言
+
+ 型システム(= コンパイラ)が自動で”自然な”ストラテジを見つけられるように
+ インスタンス宣言というものが必要
+ // コンパイラに “自然な”ストラテジとは何かを教えないといけない
+
+ Scala2で実装するには。。。
+
+・型クラス: trait で宣言 // done
+・型クラスのインスタンスXの実装 : trait[X]を継承したobject を実装する
+   例では Int で実装 // done
+
+・型クラスインスタンス宣言
+  “自動で”自然なストラテジ宣言を見つけられるように
+  implicit object を定義する
+  implicit object は、トップレベルでは宣言できないので
+  object か class で包まないといけない
+ // => 要確認 => うん、できない branch: feature/cannotUseImplicitObjectInTopLevel
+
+・型クラス制約
+  型クラスインスタンス宣言をした場合は
+  型クラス制約をinplicit パラメータ にする
+  ※ implicit object では 型引数を取れないため
+     implicit object setSizeComparator[T] はダメ
+
+  implicit def も型クラス制約を持てる
+  => 既に”自然な”定義がされている型から
+     新たに”自然な”定義をすることができる
+
+  例: tuple
+  デフォルトではtuple2 の順序は
+  _1 の順序 => _2の順序 という形で決めている
+  ここでの”自然さ”として、_2 の順序 => _1の順序 で定まる定義をしようと思う
