@@ -17,6 +17,12 @@ object Main extends App{
   val sortedTupleList = sort(List((1,2), (4,3), (6,2)))
   println(sortedTupleList)
 
+  val intCompareResult = IntComparator.compare(3,4)
+  println(intCompareResult)
+
+  val intComparatorResult2 = implicitly[Comparator[Int]].compare(3,4)
+  println(intComparatorResult2)
+
   def sort[T](list: List[T])(implicit comparator: Comparator[T]): List[T] = {
     list match {
       case x :: xs =>
