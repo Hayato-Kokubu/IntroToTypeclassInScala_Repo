@@ -13,6 +13,10 @@ object Main extends App{
   val sortedSetsList2 = sort(List(Set("one", "two"), Set("1", "2", "3")))
   println(sortedSetsList2)
 
+
+  val sortedTupleList = sort(List((1,2), (4,3), (6,2)))
+  println(sortedTupleList)
+
   def sort[T](list: List[T])(implicit comparator: Comparator[T]): List[T] = {
     list match {
       case x :: xs =>

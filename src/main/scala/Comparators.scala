@@ -7,4 +7,14 @@ object Comparators {
       def compare(a: Set[T], b: Set[T]): Int = a.size - b.size
     }
   }
+
+  implicit def tupleComparator[T1, T2](
+    implicit cmp1: Comparator[T1], cmp2: Comparator[T2]
+  ): Comparator[(T1, T2)] = {
+    new Comparator[(T1, T2)] {
+      def compare(a: (T1, T2), b: (T1, T2)): Int = {
+        val res2 = cmp2.compare(a._2, b._2)
+        if (res2 == 0) cmp1.compare(a._1, b._1) else res2
+      } }
+  }
 }
