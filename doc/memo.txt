@@ -107,3 +107,8 @@ intでの比較の仕方でやってくれる
   => enrich my library pattern
      implicit class で行うことができる。
 
+
+・型クラスライブラリには、Cats と Scalaz がある
+  // 特にCats については必修
+
+  Scala3については略
