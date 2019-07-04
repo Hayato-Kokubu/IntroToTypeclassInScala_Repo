@@ -15,7 +15,7 @@ object Main extends App{
   println(sortedSetsList2)
 
 
-  val sortedTupleList = sort(List((1,2), (4,3), (6,2)))
+  val sortedTupleList = sort(List[(Int, Int)]( (1,2), (4,3), (6,2) ))(implicitly[Comparator[(Int, Int)]])
   println(sortedTupleList)
 
   val intCompareResult = IntComparator.compare(3,4)
